@@ -1,0 +1,55 @@
+{% extends 'folders/visualizacion.html' %}
+{% load static %}
+
+{% block carpetas %}
+  
+  <div class="container-fluid div-titulo-carpeta">
+    <p class="titulo-carpeta">{{ carpeta.NOMBRE }}</p>
+    
+  </div>
+  <div class="input-detalle">
+    Búsqueda: <input class="form-control-carpetas" id="myInput" type="text" placeholder="">
+  </div>
+
+  <table class="tabla-activos" >
+    <thead>
+      <tr>
+        <th>Nombre del Archivo</th>
+        <th>Fecha de Carga</th>
+        <th>Descargar</th>
+        <th>Editar</th>
+      </tr>
+    </thead>
+    <tbody id="myTable">
+      {% for archivo in archivos %}
+      <tr>
+        <td>{{ archivo.NOMBRE }}</td>
+        <td>{{ archivo.FECHA_CARGA|date:"d-M-Y" }}</td>
+        <td>
+          <a href="{{ archivo.ARCHIVO.url }}" target="_blank" class="btn btn-default btn-sm">
+              <span class="glyphicon glyphicon-save-file"></span>
+          </a>
+        </td>
+        <td>
+          <button type="button" class="btn btn-default btn-sm">
+            <span class="glyphicon glyphicon-pencil"></span> 
+          </button>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="4">No hay archivos en esta carpeta.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class="container-fluid pie-pagina">
+  <a class="btn btn-primary" href="javascript:history.back()">Volver Atrás</a>
+  </div>
+
+
+{% endblock %}
+
+{% block titulo %}Carpetas{% endblock %}
+
+

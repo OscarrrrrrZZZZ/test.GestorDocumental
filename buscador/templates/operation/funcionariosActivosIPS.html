@@ -1,0 +1,107 @@
+{% extends 'buscador/home.html' %}
+{% load static %}
+{% block contenido %}
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // Función para actualizar la tabla según la cantidad seleccionada
+    function actualizarTabla() {
+      var cantidadElementos = document.getElementById("cantidadElementos").value;
+      var filas = document.getElementsByClassName("fila-activo");
+      var elementosMostrados = 0;
+
+      // Mostrar solo la cantidad seleccionada de filas
+      for (var i = 0; i < filas.length; i++) {
+        if (cantidadElementos === "todos" || i < parseInt(cantidadElementos)) {
+          filas[i].style.display = "";
+          elementosMostrados++;
+        } else {
+          filas[i].style.display = "none";
+        }
+      }
+
+      // Actualizar la etiqueta con la cantidad de elementos mostrados
+      document.getElementById("elementosMostrados").innerText = 
+        cantidadElementos === "todos" ? filas.length : elementosMostrados;
+    }
+
+    // Agregar evento para detectar cambios en el cuadro de selección
+    document.getElementById("cantidadElementos").addEventListener("change", function() {
+      actualizarTabla();
+    });
+
+    // Llamar a la función al cargar la página para aplicar la configuración inicial
+    actualizarTabla();
+  });
+</script>
+
+<div class="col-sm-10 muestra-datos">
+  <div class="col-sm-6 mostrar-primeros-activos">
+    Mostrando Primeros:
+      <select class="elementos" id="cantidadElementos">
+        <option value="20">20</option>
+        <option value="50">50</option>
+        <option value="todos">Todos</option>
+      </select>
+  </div>
+  <br>
+  <input class="form-control" id="myInput" type="text" placeholder="Filtrar por id nacional, nombre, unidad organizativa, fecha de contratación...">
+  <br>
+
+  <table class="tabla-activos">
+    <thead>
+      <tr>
+        <th></th>
+        <th>ID Nacional</th>
+        <th>Funcionario/a</th>
+        <th>Unidad Organizativa</th>
+        <th>Fecha de Contratación</th>
+        <th>Activo</th>
+      </tr>
+    </thead>
+    <tbody class="body-tabla-activos" id="myTable">
+      {% for activo in activos %}
+      <tr class="fila-activo">
+        <td>{% if activo.IMAGEN %}
+          <img src="{{ activo.IMAGEN.url }}" class="imagen-funcionario">
+          {% else %}
+          <img src="{% static 'images/default-image.png' %}" class="imagen-funcionario">
+          {% endif %}</td>
+        <td>{{ activo.id }}</td>
+        <td><a href="{% url 'detalle_perfil' perfil_id=activo.id %}">{{ activo.APELLIDO_PATERNO }} {{ activo.APELLIDO_MATERNO }} {{ activo.NOMBRES }}</a></td>
+        <td>{{ activo.UO_ID.NOMBRE }}</td>
+        <td>{{ activo.FECHA_CONTRATACION|date:"d-M-Y" }}</td>
+        <td>{% if activo.ACTIVO %}
+          Sí
+          {% else %}
+          No
+          {% endif %}
+      </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+
+
+{% endblock %}
+
+{% block panel_busqueda %}
+<div class="busqueda">
+  <div class="dropdown">
+    Repositorio: <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+      Funcionarios <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+      <li><a href="{% url 'funcionariosActivosIPS' %}">Funcionarios</a></li>
+      <li><a href="{% url 'funcionariosInactivosIPS' %}">Ex Funcionarios</a></li>
+      <li><a href="{% url 'resoluciones_masivas' %}">Resoluciones Masivas</a></li>
+      <li><a href="{% url 'buscar_archivos' %}">Archivos Cargados</a></li>
+  </div>
+</div>
+{% endblock %}
+
+{% block titulo %}Activos{% endblock %}
+
+

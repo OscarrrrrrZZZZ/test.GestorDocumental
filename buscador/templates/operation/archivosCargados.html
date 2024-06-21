@@ -1,0 +1,84 @@
+{% extends 'buscador/home.html' %}
+{% load static %}
+{% block contenido %}
+
+
+<div class="col-sm-10 muestra-datos">
+  <div class="col-sm-6 mostrar-primeros-activos">
+    Mostrando Primeros:
+      <select class="elementos" id="cantidadElementos">
+        <option value="20">20</option>
+        <option value="50">50</option>
+        <option value="todos">Todos</option>
+      </select>
+  </div>
+  <br>
+  <input class="form-control" id="myInput" type="text" placeholder="Filtrar por id nacional, nombre de archivo...">
+    <br>
+    <table class="tabla-activos">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Nombre de Archivo</th>
+            <th>Funcionario Asociado</th>
+            <th>Carpeta</th>
+            <th>Fecha de Carga</th>
+            <th>Es Masivo</th>
+            <th>Visualizar</th>
+            <th>Editar</th>
+          </tr>
+        </thead>
+        <tbody class="body-tabla-activos" id="myTable">
+          {% for archivos in  archivos %}
+          <tr >
+            <td></td>
+            <td>{{ archivos.NOMBRE }}</td>
+            <td>{% if archivos.ID_CARPETA.ID_PERFIL %}
+              {{ archivos.ID_CARPETA.ID_PERFIL }}
+              {% else %}
+              RES. MASIVA
+              {% endif %}</td>
+            <td>{% if archivos.ID_CARPETA %}
+              {{ archivos.ID_CARPETA }}
+              {% else %}
+              RES. MASIVA
+              {% endif %}</td>
+            <td>{{ archivos.FECHA_CARGA|date:"d-M-Y" }}</td>
+            <td>{% if archivos.MASIVA %}
+              Sí
+              {% else %}
+              No
+              {% endif %}</td>
+            <td>
+              <a href="{{ archivos.ARCHIVO.url }}" target="_blank" class="btn btn-default btn-sm">
+                  <span class="glyphicon glyphicon-save-file"></span>
+              </a>
+          </td>
+          <td>
+            <button type="button" class="btn btn-default btn-sm">
+              <span class="glyphicon glyphicon-pencil"></span> 
+            </button>
+          </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+</div>
+{% endblock %}
+
+{% block panel_busqueda %}
+<div class="busqueda">
+  <div class="dropdown">
+    Repositorio: <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+      Archivos Cargados <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+      <li><a href="{% url 'funcionariosActivosIPS' %}">Funcionarios</a></li>
+      <li><a href="{% url 'funcionariosInactivosIPS' %}">Ex Funcionarios</a></li>
+      <li><a href="{% url 'resoluciones_masivas' %}">Resoluciones Masivas</a></li>
+      <li><a href="{% url 'buscar_archivos' %}">Archivos Cargados</a></li>
+  </div>
+</div>
+{% endblock %}
+
+{% block titulo %}Inicio{% endblock %}

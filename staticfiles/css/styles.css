@@ -1,0 +1,531 @@
+.navbar {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Ajusta el valor de la sombra según sea necesario */
+  border: none;
+  height: 55px;
+  border-radius: 0px; /* Agrega bordes redondeados */
+  background-color: #10232e;
+
+}
+
+.navbar-header {
+  display: flex;
+ 
+}
+
+.navbar-brand img {
+  max-height: 300%;
+  margin-top: -8px;
+  /* Ajusta el tamaño máximo de la imagen según sea necesario */
+}
+
+.navbar-inverse .navbar-header,
+.navbar-inverse .navbar-buttons {
+    display: flex;
+    align-items: center;
+}
+
+
+/* Asegura que el cuerpo ocupe toda la pantalla y el fondo se aplica correctamente */
+html, body {
+  height: auto;
+  margin:0;
+  background-color: #eaf3f8;
+  
+}
+
+.navbar-inverse .navbar-buttons {
+    justify-content: space-between;
+    width: 100%;
+}
+
+.navbar-inverse .navbar-right {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-inverse .navbar-right li {
+    display: flex;
+    align-items: center;
+}
+
+.busqueda-datos{
+  font-family: sans-serif;
+  font-weight: bold;
+  font-weight: 600;
+  margin: 0;
+  text-align: left;
+  
+}
+
+.dd-usuario{
+  background-color: #10232e;
+  border: none;
+}
+
+
+.boton-busqueda{
+  font-family: sans-serif;
+  font-weight: normal;
+  font-size: 13px;
+  border: #837a7a;
+  color: #837a7a;
+  background-color: whitesmoke;
+  border: 1px solid #10232e;
+  width: 200px;
+  height: 30px;
+  text-align: left;
+  vertical-align: middle;
+  box-shadow: 0px 4px 10px 0px rgba(0,0,0,0.2);
+}
+
+.dropdown-menu {
+  min-width: auto;
+  border-radius: 15px 15px 15px 15px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+
+
+
+.dd-menu {
+  width: auto; /* Ancho automático según el contenido */
+  max-width: 300px; /* Ancho máximo */
+  max-height: 300px; /* Limita la altura máxima del dropdown */
+  overflow-y: auto; /* Añade scroll si el contenido es mayor que la altura máxima */
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  display: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  margin-left: -310px;
+}
+
+.dd-menu.active {
+  display: block;
+}
+
+.dd-item {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+}
+
+.dd-item:last-child {
+  border-bottom: none;
+}
+
+.dd-item .avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 10px;
+}
+
+.dd-item .avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.dd-item .media-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.dd-item .media-body h5 {
+  margin: 0;
+  font-size: 16px;
+  margin-top: 5px; /* Ajuste de margen para separar el nombre del avatar */
+}
+
+.imagen-funcionario{
+  border-radius: 20px;
+  width: 40px;
+  height: 40px;
+}
+
+.repositorios-creados{
+  padding-bottom: 10px;
+}
+
+.tabla-activos {
+  border-collapse: collapse;
+  text-align: center;
+  width: 100%; /* Ajusta el ancho según tus necesidades */
+}
+
+/* Clase para resaltar las filas al pasar el mouse sobre ellas */
+.tabla-activos tbody tr:hover {
+  background-color: #eaf3f8; /* Color de fondo al pasar el mouse */
+}
+
+/* Clase para hacer las filas clicables */
+.tabla-activos tbody tr {
+  cursor: pointer; /* Cambia el cursor al pasar por encima */
+}
+
+/* Estilos para las celdas */
+.tabla-activos th{
+  padding: 8px;
+  background-color: #10232e;
+  text-align: center;
+  color: white;
+  box-shadow: 4 4px 10px rgba(0, 0, 0, 0.1); /* Ajusta el valor de la sombra según sea necesario */
+  transition: border-color 0.3s; /* Transición suave para el cambio de color de borde */
+  
+
+
+}
+
+.tabla-activos tr{
+  text-align: center;
+  background-color: white;
+  height: 50px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-family: sans-serif;
+  font-weight: bold;
+  border: 1px solid #9a9c9c;
+  border-radius: 5px;
+}
+
+.mostrar-primeros-activos{
+  vertical-align: middle;
+  margin-bottom: 10px;
+  text-align: left;
+  margin-left: -7px;
+  font-weight: bold;
+
+}
+
+.elementos{
+  width: 75px;
+  height: 30px;
+  vertical-align: middle;
+  text-align: center;
+  font-family: sans-serif;
+  font-weight: normal;
+  font-size: 13px;
+  color: rgb(26, 26, 26);
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+
+}
+
+.elementos-activos{
+  vertical-align: middle;
+  padding-top: 2px;
+}
+
+
+.repositorio-boton{
+  margin-top: 10px;
+  background-color: #10232e;
+  border: none;
+  border-radius: 10px;
+  height: 50px;
+  width: 80% ;
+  box-shadow: 0 4px 10px rgba(83, 68, 150, 0.1);
+  transition: border-color 0.3s; /* Transición suave para el cambio de color de borde */
+  color: white;
+  font-family: sans-serif;
+  font-weight: bold;
+  font-weight: 800;
+}
+
+.muestra-datos{
+  position:relative;
+  padding-top: 10px;
+  height: auto;
+  margin-top: 10px;
+  background-color: white;
+  padding-bottom: 20px;
+  border-radius: 10px;
+}
+
+
+
+/* Set gray background color and 100% height */
+.sidenav {
+  background-color: #eaf3f8;
+  height: auto;
+  top: 0; /* Alinear el inicio del div con la parte superior de la pantalla */
+  margin-top: -20px;
+  position: sticky;
+}
+
+
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+
+
+.search-bar {
+  position: absolute;
+  right: 100%;
+  margin-right: 10px;
+  height: 34px; /* Ajusta la altura para que coincida con el navbar */
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #555;
+  background-color: #fff;
+  background-image: none;
+  border: 1px solid #ccc;
+  border-radius: 20px; /* Agrega bordes redondeados */
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+  -webkit-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+  -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+  transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+  width: 300px; /* Ancho expandido */
+  margin-top: -8px;
+}
+
+.search-bar:focus {
+  border-color: #66afe9;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
+}
+
+.oculto {
+  display: none; /* Ocultar la barra de búsqueda */
+}
+
+.admin-perfiles,
+.crear-perfil,
+.adjuntar-archivo {
+  border: none;
+  font-family: sans-serif;
+  font-weight: bold; 
+  font-size: 15px;
+  height: 80px;
+  width: 100% ;
+  color: #10232e;
+}
+
+.caja-boton1,
+.caja-boton2,
+.caja-boton3,
+.caja-boton4{
+  margin-top: 50px;
+}
+
+.imagen-usuario-activo{
+  margin-top: 20px;
+}
+.imagen-usuario-activo-1{
+  border-radius: 50px;
+  height: 100px;
+  width: 100px;
+}
+.input-detalle{
+  text-align: left;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.form-control-carpetas{
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  height: 40px;
+  width: 400px;
+  font-weight: normal;
+}
+
+
+
+/* On small screens, set height to 'auto' for sidenav and grid */
+@media screen and (max-width: 767px) {
+  .sidenav {
+    height: auto;
+    padding: 15px;
+    background-color: #555;
+  }
+}
+
+.sorting i {
+  display: none;
+  color: white;
+}
+.sorting.asc i.fa-chevron-up {
+  display: inline-block;
+  color: white;
+}
+.sorting.desc i.fa-chevron-down {
+  display: inline-block;
+  color: white;
+}
+
+
+.modal-dialog {
+  max-width: 80%; /* Ajustar el ancho del modal */
+}
+.form-row {
+  display: flex;
+  justify-content: space-between;
+}
+.form-group img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100px;
+  height: 100px;
+}
+.modal-dialog {
+  max-width: 80%;
+}
+.form-row {
+  display: flex;
+  justify-content: space-between;
+}
+.form-group img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+.image-upload {
+  position: relative;
+  display: inline-block;
+}
+.camera-icon {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border-radius: 50%;
+  padding: 5px;
+}
+.camera-icon i {
+  font-size: 20px;
+}
+.form-control-file.d-none {
+  display: none;
+}
+.imagen-perfil{
+  margin-top: 20px;
+}
+.panel-body{
+  height: 100%;
+  width: 100%;
+  background-color: #10232e;
+}
+.row-perfil{
+  display: table;
+  display: table-cell;
+  vertical-align: middle;
+
+}
+
+.nombre-b {
+  text-align: center;
+  color: white;
+  font-family: sans-serif;
+  font-weight: 800;
+  font-size: 30px;
+  display: table-cell;
+  vertical-align: middle;
+  
+
+}
+
+.imagen-funcionario-b{
+  height: 100px;
+  width: 100px;
+  border-radius: 50px;
+  box-shadow: 4 4px 10px rgba(0, 0, 0, 0.1); /* Ajusta el valor de la sombra según sea necesario */
+  transition: border-color 0.3s; /* Transición suave para el cambio de color de borde */
+  
+}
+
+.imagen-a{
+  height: 100px;
+  width: 100px;
+  border-radius: 50px;
+  box-shadow: 4 4px 10px rgba(0, 0, 0, 0.1); /* Ajusta el valor de la sombra según sea necesario */
+  transition: border-color 0.3s; /* Transición suave para el cambio de color de borde */
+  
+}
+
+.unidad-c{
+  color: white;
+  font-family: sans-serif;
+  font-weight: bold;
+  font-size: 15px;
+  text-align: left; /* Center the text */
+  font-weight: 500;
+}
+
+.pie-pagina{
+  text-align: right;
+  margin-top: 20px;
+}
+
+.div-titulo-carpeta{
+  height: 100%;
+  width: 100%;
+  background-color: #10232e;
+  margin-top: -10px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+}
+
+.titulo-carpeta{
+  font-family: sans-serif;
+  font-weight: bold;
+  font-size: 20px;
+  color: white;
+  font-weight: 800;
+}
+
+.body-login {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('images/202.png'); 
+  background-size: cover; /* Ajusta la imagen al tamaño del contenedor */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  vertical-align: middle;
+
+}
+
+.modal-login {
+  position: relative;
+  top: 40%;
+  width: 600px;
+  margin: auto;
+  z-index: 1;
+  border-radius: 10px;
+  margin-top: -100px;
+}
+
+
+
+.btn-login{
+  width: 100%;
+  height: 50px;
+  color: white;
+  font-size: bold;
+  font-family: sans-serif;
+  background-color: #10232e; /* Color de fondo del encabezado */
+  border-radius: 5px;
+}
+
+

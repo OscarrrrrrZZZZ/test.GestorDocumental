@@ -1,0 +1,21 @@
+{% extends 'buscador/home.html' %}
+{% load static %}
+{% block contenido %}
+<div class="col-sm-10 muestra-datos">
+    {% block panel_administration %} {% endblock %}
+</div>
+{% endblock %}
+{% block panel_busqueda %}
+<div class="busqueda">
+  <div class="dropdown">
+    Administrar: <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+      {% block panel_administration_1 %}Seleccione{% endblock %} <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+      <li><a href="{% url 'administrar_plantillas' %}">Administrar Plantillas</a></li>
+      <li><a href="{% url 'admin_usuarios' %}">Administrar Usuarios</a></li>
+  </div>
+</div>
+{% endblock %}
+
+{% block titulo %}Administración{% endblock %}

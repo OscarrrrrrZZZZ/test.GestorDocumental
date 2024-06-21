@@ -1,0 +1,35 @@
+{% extends 'folders/visualizacion.html' %}
+{% load static %}
+
+{% block carpetas %}
+
+<table class="tabla-activos">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Carpeta</th>
+        <th>Cantidad de Archivos</th>
+        <th>Visualizar Archivos</th>
+
+      </tr>
+    </thead>
+    <tbody>
+        {% for carpeta in carpetas %}
+
+        <tr>
+          <td></td>
+          <td>{{ carpeta.NOMBRE }}</td>
+          <td>{{ carpeta.archivo_count }}</td>
+          <td><a href="{% url 'detalle_carpeta' carpeta_id=carpeta.id %}">Ver Archivos</a></td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="3">No hay carpetas disponibles.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+  </table>
+  <div class="container-fluid pie-pagina">
+    <a class="btn btn-primary" href="javascript:history.back()">Volver Atrás</a>
+    </div>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'administration/panel-administracion.html' %}
+{% load static %}
+{% block panel_administration %}
+<div class="input-busqueda col-sm-6 ">
+  <div class="input-detalle">
+    Búsqueda: <input class="form-control-carpetas" id="myInput" type="text" placeholder="">
+  </div>
+</div>
+<div class="agregar-plantilla col-sm-6">
+  <button type="" class="agregar-usuario-btn">Agregar Usuario</button>
+</div>
+
+
+<div class="tabla-plantillas">
+  <table class="table table-bordered table-hover row-clickable">
+      <thead>
+        <tr>
+          <th>Funcionario</th>
+          <th>Nombre de Usuario</th>
+          <th>Grupo</th>
+          <th>Editar</th>
+        </tr>
+      </thead>
+      <tbody id="myTable">
+        {% for usuario in usuario %}
+        <tr>
+          <td>{{ usuario.first_name}} {{ usuario.last_name}}</td>
+          <td>{{ usuario.username}}</td>
+          <td>{% if usuario.groups.exists %}
+            {% for group in usuario.groups.all %}
+              {{ group.name }}
+              {% if not forloop.last %}, {% endif %}
+            {% endfor %}
+          {% else %}
+            No asignado a ningún grupo
+          {% endif %}</td>
+          <td>
+            <button type="button" class="btn btn-default btn-sm">
+              <span class="glyphicon glyphicon-pencil"></span> 
+            </button>
+          </td>
+          </tr>
+          {% endfor %}
+      </tbody>
+  </table>
+</div>
+{% endblock %}
+
+{% block panel_administration_1 %}Administrar Usuarios{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'administration/panel-administracion.html' %}
+{% load static %}
+{% block panel_administration %}
+<div class="input-busqueda col-sm-6 ">
+  <div class="input-detalle">
+    Búsqueda: <input class="form-control-carpetas" id="myInput" type="text" placeholder="">
+  </div>
+</div>
+<div class="agregar-plantilla col-sm-6">
+  <button type="" class="agregar-plantilla-btn">Agregar Plantilla</button>
+</div>
+
+
+<div class="tabla-plantillas">
+  <table class="table table-bordered table-hover row-clickable">
+      <thead>
+        <tr>
+          <th>ID de Plantilla</th>
+          <th>Nombre de Plantilla</th>
+          <th>Nomenclatura de Plantilla</th>
+          <th>Estado</th>
+          <th>Editar</th>
+        </tr>
+      </thead>
+      <tbody id="myTable">
+        {% for plantilla in  plantillas %}
+        <tr>
+          <td>{{ plantilla.id }}</td>
+          <td>{{ plantilla.NOMBRE }}</td>
+          <td>{{ plantilla.NOMENCLATURA }}</td>
+          <td>{% if plantilla.ACTIVO %}
+            Activo
+            {% else %}
+            Inactivo
+            {% endif %}</td>
+          <td>
+            <button type="button" class="btn btn-default btn-sm">
+              <span class="glyphicon glyphicon-pencil"></span> 
+            </button>
+          </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+  </table>
+</div>
+{% endblock %}
+
+{% block panel_administration_1 %}Administrar Plantillas{% endblock %}

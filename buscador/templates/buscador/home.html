@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gestor Documental IPS: {% block titulo %}{% endblock %}</title>
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    
+    <!-- FontAwesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+    <!-- Custom JS SCRIPT -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+
+</head>
+<body>
+
+  <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="logoutModalLabel">Confirmar cierre de sesión</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que deseas cerrar sesión?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">Cerrar sesión</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="cargarArchivoModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Cargar Nuevo Archivo</h4>
+          </div>
+          <div class="modal-body">
+              <form id="formCargarArchivo" enctype="multipart/form-data" method="post" action="{% url 'cargar_archivo' %}">
+                  {% csrf_token %}
+                  <div class="form-group">
+                    <label for="plantilla">Seleccionar Plantilla:</label>
+                    <select class="form-control" id="plantilla" name="plantilla">
+                        {% for plantilla in plantillas %}
+                        <option value="{{ plantilla.id }}" data-nomenclatura="{{ plantilla.NOMENCLATURA }}">{{ plantilla.NOMBRE }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                  <div class="form-group">
+                      <label for="nombre">Nombre del Archivo:</label>
+                      <input type="text" class="form-control" id="nombre" name="NOMBRE" required>
+                  </div>
+                  <div class="form-group">
+                      <label for="archivo">Archivo:</label>
+                      <input type="file" class="form-control-file" id="archivo" name="ARCHIVO" required>
+                  </div>
+                  <div class="form-group">
+                      <label for="masiva">Masiva:</label>
+                      <select class="form-control" id="masiva" name="MASIVA">
+                          <option value="false">No</option>
+                          <option value="true">Sí</option>
+                      </select>
+                  </div>
+                  <div class="form-group">
+                      <label for="perfil">Buscar Perfil:</label>
+                      <input type="text" class="form-control" id="busquedaPerfil" placeholder="Buscar perfil...">
+                      <select class="form-control" id="perfil" name="perfil" size="5"></select>
+                  </div>
+                  <div class="form-group">
+                      <label for="id_carpeta">Seleccionar Carpeta:</label>
+                      <select class="form-control" id="id_carpeta" name="ID_CARPETA" size="5"></select>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Guardar Archivo</button>
+              </form>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+          </div>
+      </div>
+  </div>
+</div>
+
+  <div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg"> <!-- Cambiado a modal-lg para mayor ancho -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Agregar Nuevo Perfil</h4>
+            </div>
+            <div class="modal-body">
+                <form id="formNuevoPerfil" enctype="multipart/form-data" method="post" action="{% url 'guardar_perfil' %}">
+                    {% csrf_token %}
+                    <div class="form-group text-center position-relative"> <!-- Centrar la imagen -->
+                      <div class="image-upload">
+                          <label for="imagen" style="cursor: pointer;">
+                              <img id="preview" src="{% static 'images/default-image.png' %}" alt="Vista previa de la imagen" style="max-width: 100%; max-height: 200px; margin-top: 10px; border-radius: 50%;">
+                              <div class="camera-icon">
+                                  <i class="fa fa-camera"></i>
+                              </div>
+                          </label>
+                          <input type="file" class="form-control-file d-none" id="imagen" name="imagen" onchange="previewImage(event)">
+                      </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-3">
+                            <label for="perfil_id">ID de Perfil:</label>
+                            <input type="text" class="form-control" id="perfil_id" name="perfil_id" required>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="nombres">Nombres:</label>
+                            <input type="text" class="form-control" id="nombres" name="nombres" required>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="apellido_paterno">Apellido Paterno:</label>
+                            <input type="text" class="form-control" id="apellido_paterno" name="apellido_paterno" required>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="apellido_materno">Apellido Materno:</label>
+                            <input type="text" class="form-control" id="apellido_materno" name="apellido_materno" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-3">
+                            <label for="activo">Activo:</label>
+                            <select class="form-control" id="activo" name="activo">
+                                <option value="true">Sí</option>
+                                <option value="false">No</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="fecha_contratacion">Fecha de Contratación:</label>
+                            <input type="date" class="form-control" id="fecha_contratacion" name="fecha_contratacion" required>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="uo_id">Unidad Organizativa:</label>
+                            <input type="text" class="form-control" id="busquedaUO" placeholder="Buscar unidad organizativa...">
+                            <select class="form-control" id="uo_id" name="uo_id" size="5"></select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Guardar Perfil</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div id="modalExito" class="modal fade " role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Éxito</h4>
+            </div>
+            <div class="modal-body">
+                <p id="mensajeExito"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="location.reload();">Cerrar y Actualizar</button>
+            </div>
+    </div>
+
+  </div>
+</div>
+ 
+    <nav class="navbar navbar-inverse">
+        <div class="nav-fluid">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">         
+            </button>
+            <a class="navbar-brand" href="{%url 'buscar_archivos' %}">
+                <img src="{% static 'images/IPS_CHA_DGDP_BLANCO_SINCOMPLEMENTO.png' %}" alt="Logo">
+            </a>
+          </div>
+          <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav">
+              <li class=""><a href="#"></a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="search-container">
+                  <div class="form-group position-relative">
+                    <input type="text" class="form-control search-bar" id="search-bar" placeholder="Buscar Funcionario...">
+                    <div class="dd-menu" id="result-dropdown" style="display: none;"></div>
+                  </div>
+                  <a href="#" id="search-icon"><span class="glyphicon glyphicon-search lupa" style="color: white"></span></a>
+                </li>
+                <li>
+                  <button class="btn btn-default dd-usuario" type="button" id="dropdownMenuButton" data-toggle="dropdown">
+                    <span class="glyphicon glyphicon-user usuario" style="color:white"></span>
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <li>
+                      <a href="" data-toggle="modal" data-target="#logoutModal">Cerrar Sesión</a>
+                    </li>
+                  </li>
+              </ul>
+            
+          </div>
+        </div>
+      </nav>
+  
+<div class="container-fluid text-center">    
+  <div class="row content" style="height: 100vh;" >
+    <div class="col-sm-2 sidenav">
+      <div class="imagen-usuario-activo">
+        <img src="{% static 'images/default-image.png' %}" class="imagen-usuario-activo-1">
+      </div>
+      <div class="nombre-usuario-activo">
+        {{ user.first_name }} {{ user.last_name }}
+      </div>
+        <div class="caja-boton0">
+          <a class="inicio-home" href="{% url 'buscar_archivos' %}">
+            Inicio &#10132;</a>
+        </div>
+        <div class="caja-boton1">
+          <a class="crear-perfil" data-toggle="modal" data-target="#myModal" href="">
+            Nuevo Funcionario &#10132;</a>
+        </div>
+        <div class="caja-boton2">
+            <a class="adjuntar-archivo"  href="" data-toggle="modal" data-target="#cargarArchivoModal">Cargar Archivo &#10132;</a>
+        </div>
+        <div class="caja-boton3">
+          <a class="admin-perfiles" href="{% url 'panel_administracion' %}">Panel Administración &#10132;</a>
+      </div>
+      
+    
+    </div>
+    <div class="col-sm-10 busqueda-datos">
+      {% block panel_busqueda %} {% endblock %}
+      <!-- 
+    <div class="busqueda">
+      <div class="dropdown">
+        Repositorio: <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          {% block repositorio %} {% endblock %}<span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <li><a href="{% url 'funcionariosActivosIPS' %}">Funcionarios</a></li>
+          <li><a href="{% url 'funcionariosInactivosIPS' %}">Ex Funcionarios</a></li>
+          <li><a href="{% url 'resoluciones_masivas' %}">Resoluciones Masivas</a></li>
+          <li><a href="{% url 'buscar_archivos' %}">Archivos Cargados</a></li>
+      </div>
+    </div>-->
+  </div>
+  {% block contenido %} {% endblock %}
+  </div>
+</div>
+</body>
+</body>
+
+
+
+<script>
+  $(document).ready(function() {
+      // Función para cargar las unidades organizativas
+      function cargarUnidadesOrganizativas() {
+          fetch('/api/unidades_organizativas/') // Endpoint para obtener las unidades organizativas
+              .then(response => response.json())
+              .then(data => {
+                  const selectUO = document.getElementById('uo_id');
+                  const busquedaUO = document.getElementById('busquedaUO');
+
+                  // Limpiar opciones existentes
+                  selectUO.innerHTML = '';
+
+                  // Iterar sobre los datos y agregar opciones al select
+                  data.forEach(uo => {
+                      const option = document.createElement('option');
+                      option.value = uo.id;
+                      option.textContent = uo.NOMBRE;
+                      selectUO.appendChild(option);
+                  });
+
+                  // Configurar la búsqueda rápida de unidades organizativas
+                  busquedaUO.addEventListener('input', function() {
+                      const searchText = this.value.toLowerCase();
+                      const options = selectUO.options;
+
+                      for (let i = 0; i < options.length; i++) {
+                          const optionText = options[i].textContent.toLowerCase();
+                          const match = optionText.includes(searchText);
+                          options[i].style.display = match ? 'block' : 'none';
+                      }
+                  });
+              })
+              .catch(error => console.error('Error al cargar unidades organizativas:', error));
+      }
+
+      // Llamar a la función para cargar unidades organizativas al cargar el DOM
+      cargarUnidadesOrganizativas();
+
+      // Función para previsualizar la imagen seleccionada
+
+    // Previsualizar la imagen seleccionada
+    function previewImage(event) {
+      var reader = new FileReader();
+      reader.onload = function() {
+        var output = document.getElementById('preview');
+        output.src = reader.result;
+      };
+      reader.readAsDataURL(event.target.files[0]);
+    }
+
+
+      // Función para manejar el envío del formulario
+      $('#formNuevoPerfil').submit(function(e) {
+                e.preventDefault(); // Evita el envío tradicional del formulario
+
+                var formData = new FormData(this); // Obtén los datos del formulario en un objeto FormData
+
+                // Realiza la solicitud AJAX para enviar los datos al servidor
+                $.ajax({
+                    url: $(this).attr('action'), // URL especificada en el atributo action del formulario
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        console.log('Perfil guardado exitosamente:', response);
+                        $('#myModal').modal('hide'); // Cierra el modal de agregar perfil
+
+                        // Mostrar el modal de éxito
+                        $('#modalExito').modal('show');
+                        $('#mensajeExito').text('Perfil guardado exitosamente.');
+
+                        // Limpiar el formulario después de guardar
+                        $('#formNuevoPerfil')[0].reset();
+                    },
+                    error: function(error) {
+                        console.error('Error al guardar perfil:', error.responseText);
+                        $('#message-container').removeClass('alert-success').addClass('alert-danger').show();
+                        $('#message-text').text('Error al guardar perfil: ' + error.responseText);
+                    }
+          });
+      });
+  });
+</script>
+
+<script>
+  $(document).ready(function() {
+      // Función para cargar las plantillas
+      function cargarPlantillas() {
+          $.ajax({
+              url: "{% url 'api_obtener_plantillas' %}",  // URL de la API o vista que devuelve las plantillas
+              method: 'GET',
+              dataType: 'json',
+              success: function(data) {
+                  // Limpiar el select de plantillas
+                  $('#plantilla').empty();
+                  // Agregar las nuevas opciones al select
+                  $.each(data, function(index, plantilla) {
+                      $('#plantilla').append('<option value="' + plantilla.id + '" data-nomenclatura="' + plantilla.NOMENCLATURA + '">' + plantilla.NOMBRE + '</option>');
+                  });
+              },
+              error: function(xhr, status, error) {
+                  console.error('Error al cargar las plantillas:', status, error);
+              }
+          });
+      }
+
+      // Llamar a la función para cargar las plantillas al cargar el modal
+      $('#cargarArchivoModal').on('shown.bs.modal', function() {
+          cargarPlantillas();
+      });
+
+      // Manejar el cambio en el select de plantillas
+      $('#plantilla').change(function() {
+          var selectedOption = $(this).find('option:selected');
+          var nomenclatura = selectedOption.data('nomenclatura');
+          $('#nombre').val(nomenclatura);
+      });
+  });
+</script>
+<script>
+    document.getElementById("search-icon").addEventListener("click", function(event){
+        event.preventDefault();
+        var searchBar = document.getElementById("search-bar");
+        searchBar.classList.toggle("oculto"); // Alternar la clase "oculto"
+    });
+</script>
+
+
+<script>
+  $('th').click(function() {
+    var table = $(this).parents('table').eq(0)
+    var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()))
+    this.asc = !this.asc
+    if (!this.asc) {
+      rows = rows.reverse()
+    }
+    for (var i = 0; i < rows.length; i++) {
+      table.append(rows[i])
+    }
+    setIcon($(this), this.asc);
+  })
+
+  function comparer(index) {
+    return function(a, b) {
+      var valA = getCellValue(a, index),
+        valB = getCellValue(b, index)
+      return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.localeCompare(valB)
+    }
+  }
+
+  function getCellValue(row, index) {
+    return $(row).children('td').eq(index).html()
+  }
+
+  function setIcon(element, asc) {
+  $("th").each(function(index) {
+    $(this).removeClass("sorting asc desc");
+    $(this).find("i").remove(); // Eliminar ícono existente
+  });
+  element.addClass("sorting");
+  if (asc) {
+    element.addClass("asc");
+    element.append('<i class="fas fa-chevron-up"></i>');
+  } else {
+    element.addClass("desc");
+    element.append('<i class="fas fa-chevron-down"></i>');
+  }
+}
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // Elementos del DOM
+    var searchBar = document.getElementById("search-bar");
+    var resultDropdown = document.getElementById("result-dropdown");
+
+    // Función para realizar la búsqueda
+    searchBar.addEventListener("input", function() {
+      var query = searchBar.value;
+
+      if (query.length > 0) {
+        fetch(`/buscar_funcionarios/?query=${query}`, {
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          // Limpiar el dropdown
+          resultDropdown.innerHTML = "";
+          // Mostrar resultados
+          data.forEach(funcionario => {
+            var item = document.createElement("a"); // Crear elemento enlace <a>
+            item.setAttribute("href", `/detalle_perfil/${funcionario.id}/`); // Establecer el atributo href con la URL dinámica
+            item.classList.add("dropdown-item"); // Agregar clase dropdown-item
+
+            // Contenido de la fila
+            item.innerHTML = `
+              <div class="dd-item">
+                <div class="avatar">
+                  <img src="${funcionario.imagen ? funcionario.imagen : '{% static "images/default-image.png" %}'}" alt="Avatar">
+                </div>
+                <div class="media-body">
+                  ${funcionario.nombres} ${funcionario.apellido_paterno} ${funcionario.apellido_materno}
+                </div>
+              </div>`;
+
+            // Agregar el elemento enlace al dropdown
+            resultDropdown.appendChild(item);
+          });
+          resultDropdown.style.display = "block";
+        });
+      } else {
+        resultDropdown.style.display = "none";
+      }
+    });
+
+    // Ocultar el dropdown cuando se hace clic fuera
+    document.addEventListener("click", function(e) {
+      if (!searchBar.contains(e.target) && !resultDropdown.contains(e.target)) {
+        resultDropdown.style.display = "none";
+      }
+    });
+  });
+
+</script>
+
+
+<script>
+  $(document).ready(function() {
+      // Buscar perfiles
+      $('#busquedaPerfil').on('input', function() {
+          var query = $(this).val();
+          $.ajax({
+              url: "{% url 'buscar_perfil' %}",
+              data: {
+                  'q': query
+              },
+              success: function(data) {
+                  var perfiles = $('#perfil');
+                  perfiles.empty();
+                  $.each(data.perfiles, function(index, perfil) {
+                      perfiles.append(new Option(perfil.NOMBRES + ' ' + perfil.APELLIDO_PATERNO + ' ' + perfil.APELLIDO_MATERNO, perfil.id));
+                  });
+              }
+          });
+      });
+
+      // Cargar carpetas según perfil seleccionado
+      $('#perfil').on('change', function() {
+          var perfilId = $(this).val();
+          $.ajax({
+              url: "/cargar_carpetas/" + perfilId + "/",
+              success: function(data) {
+                  var carpetas = $('#id_carpeta');
+                  carpetas.empty();
+                  $.each(data.carpetas, function(index, carpeta) {
+                      carpetas.append(new Option(carpeta.NOMBRE, carpeta.id));
+                      
+                  });
+              }
+          });
+      });
+  });
+</script>
+<script>
+  $(document).ready(function(){
+    $("#myInput").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#myTable tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+  });
+  </script>
+
+<script>
+  $(document).ready(function() {
+      // Manejar el cambio en el select de plantillas
+      $('#plantilla').change(function() {
+          var selectedOption = $(this).find('option:selected');
+          var nomenclatura = selectedOption.data('nomenclatura');
+          $('#nombre').val(nomenclatura);
+      });
+  });
+</script>
+
+
+</html>

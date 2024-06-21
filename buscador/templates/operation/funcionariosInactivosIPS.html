@@ -1,0 +1,63 @@
+{% extends 'buscador/home.html' %}
+{% load static %}
+{% block contenido %}
+
+<div class="col-sm-10 muestra-datos">
+  <div class="col-sm-6 mostrar-primeros-activos">
+    Mostrando Primeros:
+      <select class="elementos" id="cantidadElementos">
+        <option value="20">20</option>
+        <option value="50">50</option>
+        <option value="todos">Todos</option>
+      </select>
+  </div>
+  <br>
+  <input class="form-control" id="myInput" type="text" placeholder="Filtrar por id nacional, nombre, unidad organizativa, fecha de contratación...">
+    <br>
+    <table class="tabla-activos">
+        <thead>
+          <tr>
+            <th></th>
+            <th>ID Nacional</th>
+            <th>Funcionario/a</th>
+            <th>Unidad Organizativa</th>
+            <th>Fecha de Contratación</th>
+            <th>Activo</th>
+          </tr>
+        </thead>
+        <tbody class="body-tabla-activos" id="myTable">
+          {% for inactivos in  inactivos %}
+          <tr >
+            <td>{% if inactivos.IMAGEN %}
+              <img src="{{ activos.IMAGEN.url }}" class="imagen-funcionario">
+              {% else %}
+              <!-- Aquí podrías agregar un placeholder o dejarlo en blanco -->
+              {% endif %}</td>
+            <td>{{ inactivos.id }}</td>
+            <td>{{ inactivos.NOMBRES }} {{ inactivos.APELLIDO_PATERNO }} {{ inactivos.APELLIDO_MATERNO }}</td>
+            <td>{{ inactivos.UO_ID.NOMBRE }}</td>
+            <td>{{ inactivos.FECHA_CONTRATACION }}</td>
+            <td>{{ inactivos.ACTIVO }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+</div>
+{% endblock %}
+
+{% block panel_busqueda %}
+<div class="busqueda">
+  <div class="dropdown">
+    Repositorio: <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+      Ex Funcionarios <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+      <li><a href="{% url 'funcionariosActivosIPS' %}">Funcionarios</a></li>
+      <li><a href="{% url 'funcionariosInactivosIPS' %}">Ex Funcionarios</a></li>
+      <li><a href="{% url 'resoluciones_masivas' %}">Resoluciones Masivas</a></li>
+      <li><a href="{% url 'buscar_archivos' %}">Archivos Cargados</a></li>
+  </div>
+</div>
+{% endblock %}
+
+{% block titulo %}Inactivos{% endblock %}
