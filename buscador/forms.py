@@ -30,8 +30,10 @@ class ArchivoForm(forms.ModelForm):
         model = ARCHIVO
         fields = ['NOMBRE', 'ARCHIVO', 'MASIVA', 'ID_CARPETA']  
 
+from .models import Plantilla
+
 class PlantillaForm(forms.ModelForm):
     class Meta:
         model = Plantilla
-        fields = ['NOMBRE','NOMENCLATURA']  
+        fields = ['NOMBRE', 'NOMENCLATURA', 'ACTIVO']
 

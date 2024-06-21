@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Folder, File, REPOSITORIO,PERFIL,CARPETA,UNIDAD_ORGANIZATIVA, ARCHIVO, Plantilla, User
-from .forms import FolderForm, FileForm, ArchivoForm
+from .forms import FolderForm, FileForm, ArchivoForm, PlantillaForm
 from django.http import JsonResponse
 from django.shortcuts import render
 from datetime import date
@@ -121,7 +121,10 @@ def cargar_archivo(request):
         form = ArchivoForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Archivo Guardado Con Éxito')
             return redirect('buscar_archivos')  # Redirige a la página de inicio u otra página después de guardar
+        else:
+            messages.error(request, 'Error al cargar archivo.')
             
     else:
         form = ArchivoForm()
@@ -280,3 +283,40 @@ def admin_usuarios(request):
 
 def panel_administracion(request):
     return render(request, 'administration/panel-administracion.html')
+
+def crear_plantilla(request):
+    if request.method == 'POST':
+        form = PlantillaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Plantilla creada con éxito.')
+            return redirect('administrar_plantillas')
+        else:
+            messages.error(request, 'Error al crear la plantilla.')
+    else:
+        form = PlantillaForm()
+
+    return render(request, 'crear_plantilla.html', {'form': form})
+
+def editar_plantilla(request, id):
+    plantilla = get_object_or_404(Plantilla, id=id)
+
+    if request.method == 'POST':
+        form = PlantillaForm(request.POST, instance=plantilla)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Plantilla actualizada con éxito.')
+            return JsonResponse({'success': True})
+        else:
+            messages.error(request, 'Error al actualizar la plantilla.')
+            return JsonResponse({'success': False, 'errors': form.errors})
+
+    form = PlantillaForm(instance=plantilla)
+    return render(request, 'editar_plantilla.html', {'form': form})
+
+def eliminar_plantilla(request, id):
+    plantilla = get_object_or_404(Plantilla, id=id)
+    if request.method == 'POST':
+        plantilla.delete()
+        return JsonResponse({'success': True})
+    return JsonResponse({'success': False})

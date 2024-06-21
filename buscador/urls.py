@@ -34,4 +34,7 @@ urlpatterns = [
     path('admin-plantillas/', login_required(views.admin_plantillas), name='administrar_plantillas'),
     path('admin-usuarios/', login_required(views.admin_usuarios), name='admin_usuarios'),
     path('panel-administracion/', login_required(views.panel_administracion), name='panel_administracion'),
+    path('crear_plantilla/', login_required(views.crear_plantilla), name='crear_plantilla'),
+    path('editar_plantilla/<int:id>/', login_required(views.editar_plantilla), name='editar_plantilla'),
+    path('eliminar_plantilla/<int:id>/', login_required(views.eliminar_plantilla), name='eliminar_plantilla'),
 ]

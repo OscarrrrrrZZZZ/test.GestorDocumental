@@ -143,3 +143,13 @@ MAX_LOGIN_ATTEMPTS = 4
 
 LOGOUT_REDIRECT_URL = '/accounts/login'
 
+from django.contrib.messages import constants as messages
+
+MESSAGE_TAGS = {
+    messages.DEBUG: 'debug',
+    messages.INFO: 'info',
+    messages.SUCCESS: 'success',
+    messages.WARNING: 'warning',
+    messages.ERROR: 'danger',
+}
+

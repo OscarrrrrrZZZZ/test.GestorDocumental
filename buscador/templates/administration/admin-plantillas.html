@@ -1,16 +1,86 @@
 {% extends 'administration/panel-administracion.html' %}
 {% load static %}
 {% block panel_administration %}
+
+<!-- Modal para la creación de plantillas -->
+<div id="crearPlantillaModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Crear Nueva Plantilla</h4>
+          </div>
+          <div class="modal-body">
+              <form id="formCrearPlantilla" method="post" action="{% url 'crear_plantilla' %}">
+                  {% csrf_token %}
+                  <div class="form-group">
+                      <label for="nombre">Nombre:</label>
+                      <input type="text" class="form-control" id="nombre" name="NOMBRE" required>
+                  </div>
+                  <div class="form-group">
+                      <label for="nomenclatura">Nomenclatura:</label>
+                      <input type="text" class="form-control" id="nomenclatura" name="NOMENCLATURA" required>
+                  </div>
+                  <div class="form-group">
+                      <label for="activo">Activo:</label>
+                      <input type="checkbox" id="activo" name="ACTIVO" checked>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Guardar Plantilla</button>
+              </form>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+          </div>
+      </div>
+  </div>
+</div>
+
+<!-- Modal para editar plantillas-->
+<div id="editarPlantillaModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Editar Plantilla</h4>
+          </div>
+          <div class="modal-body">
+              <form id="formEditarPlantilla" method="post" action="">
+                  {% csrf_token %}
+                  <input type="hidden" id="editPlantillaId" name="id">
+                  <div class="form-group">
+                      <label for="editNombre">Nombre:</label>
+                      <input type="text" class="form-control" id="editNombre" name="NOMBRE" required>
+                  </div>
+                  <div class="form-group">
+                      <label for="editNomenclatura">Nomenclatura:</label>
+                      <input type="text" class="form-control" id="editNomenclatura" name="NOMENCLATURA" required>
+                  </div>
+                  <div class="form-group">
+                      <label for="editActivo">Activo:</label>
+                      <input type="checkbox" id="editActivo" name="ACTIVO">
+                  </div>
+                  <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                  <a href="#" class="btn btn-danger" id="eliminarPlantillaBtn">Eliminar</a>
+              </form>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+          </div>
+      </div>
+  </div>
+</div>
+
+<!-- Input y botón de agregar plantilla -->
 <div class="input-busqueda col-sm-6 ">
   <div class="input-detalle">
     Búsqueda: <input class="form-control-carpetas" id="myInput" type="text" placeholder="">
   </div>
 </div>
 <div class="agregar-plantilla col-sm-6">
-  <button type="" class="agregar-plantilla-btn">Agregar Plantilla</button>
+  <button type="" data-toggle="modal" data-target="#crearPlantillaModal" class="agregar-plantilla-btn">Agregar Plantilla</button>
 </div>
 
-
+<!-- Tabla de plantillas -->
 <div class="tabla-plantillas">
   <table class="table table-bordered table-hover row-clickable">
       <thead>
@@ -33,16 +103,72 @@
             {% else %}
             Inactivo
             {% endif %}</td>
-          <td>
-            <button type="button" class="btn btn-default btn-sm">
-              <span class="glyphicon glyphicon-pencil"></span> 
+            <td>
+              <button type="button" class="btn btn-default btn-sm edit-button" data-id="{{ plantilla.id }}" data-nombre="{{ plantilla.NOMBRE }}" data-nomenclatura="{{ plantilla.NOMENCLATURA }}" data-activo="{{ plantilla.ACTIVO }}">
+                <span class="glyphicon glyphicon-pencil"></span> 
             </button>
-          </td>
+            </td>
           </tr>
         {% endfor %}
       </tbody>
   </table>
 </div>
+
+<!-- Llamado a modal para Editar/Eliminar Plantilla-->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      const editButtons = document.querySelectorAll('.edit-button');
+      const editModal = $('#editarPlantillaModal');
+      const editForm = document.getElementById('formEditarPlantilla');
+      const eliminarBtn = document.getElementById('eliminarPlantillaBtn');
+  
+      editButtons.forEach(button => {
+          button.addEventListener('click', function() {
+              const id = this.dataset.id;
+              const nombre = this.dataset.nombre;
+              const nomenclatura = this.dataset.nomenclatura;
+              const activo = this.dataset.activo === 'True';
+  
+              document.getElementById('editPlantillaId').value = id;
+              document.getElementById('editNombre').value = nombre;
+              document.getElementById('editNomenclatura').value = nomenclatura;
+              document.getElementById('editActivo').checked = activo;
+  
+              editForm.action = `{% url 'editar_plantilla' 0 %}`.replace('0', id);
+  
+              editModal.modal('show');
+          });
+      });
+  
+      eliminarBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          const id = document.getElementById('editPlantillaId').value;
+          if (confirm('¿Estás seguro de que deseas eliminar esta plantilla?')) {
+              // Realizar solicitud AJAX para eliminar la plantilla
+              $.ajax({
+                  url: `/eliminar_plantilla/${id}/`,
+                  type: 'POST',
+                  data: {
+                      csrfmiddlewaretoken: '{{ csrf_token }}',
+                      id: id
+                  },
+                  success: function(response) {
+                      if (response.success) {
+                          alert('Plantilla eliminada correctamente.');
+                          window.location.href = "{% url 'administrar_plantillas' %}";
+                      } else {
+                          alert('Error al eliminar la plantilla.');
+                      }
+                  },
+                  error: function() {
+                      alert('Error al eliminar la plantilla.');
+                  }
+              });
+          }
+      });
+  });
+  </script>
 {% endblock %}
 
+<!-- Nombre de Dropdown-->
 {% block panel_administration_1 %}Administrar Plantillas{% endblock %}
